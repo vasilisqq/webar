@@ -9,7 +9,7 @@ let isModelLoaded = false;
 
 // Инициализация
 function init() {
-    console.log("Initializing...29");
+    console.log("Initializing...30");
     console.log("Initializing AR Scene");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
@@ -186,38 +186,51 @@ function handleCapture() {
 // Остальные функции обработки касаний остаются без изменений
 
 function capturePhoto() {
-    // Создаем временный рендерер для захвата
+    // Принудительный рендер сцены перед захватом
     renderer.render(scene, camera);
     
     const video = document.getElementById('camera-feed');
     const dpi = window.devicePixelRatio;
+    
+    // Создаем холст с учетом плотности пикселей
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    canvas.width = window.innerWidth * dpi;
-    canvas.height = window.innerHeight * dpi;
+    // Устанавливаем размеры с учетом DPR
+    const width = window.innerWidth * dpi;
+    const height = window.innerHeight * dpi;
+    
+    canvas.width = width;
+    canvas.height = height;
     canvas.style.width = window.innerWidth + 'px';
     canvas.style.height = window.innerHeight + 'px';
+    
+    // Масштабируем контекст
     ctx.scale(dpi, dpi);
 
-    // Сначала рисуем видео
-    ctx.drawImage(video, 0, 0, window.innerWidth, window.innerHeight);
-    
-    // Затем рисуем основной канвас Three.js
-    ctx.drawImage(renderer.domElement, 0, 0);
+    // 1. Рисуем видео
+    ctx.drawImage(video, 
+        0, 0, 
+        window.innerWidth, window.innerHeight,
+        0, 0,
+        window.innerWidth, window.innerHeight
+    );
 
-    // Сохранение
+    // 2. Рисуем 3D-сцену
+    const renderCanvas = renderer.domElement;
+    ctx.drawImage(renderCanvas, 
+        0, 0, 
+        renderCanvas.width, renderCanvas.height,
+        0, 0,
+        window.innerWidth, window.innerHeight
+    );
+
+    // Создаем и скачиваем файл
     const link = document.createElement('a');
     link.download = `ar-photo-${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
+    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 }
-
-window.addEventListener('load', init);
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});

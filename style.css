@@ -43,6 +43,8 @@ body {
     object-fit: cover;
     z-index: 2; /* 3D-сцена поверх видео */
     touch-action: none; /* Для мобильных жестов */
+    transform: translateZ(0); /* Фикс для мобильного рендеринга */
+    image-rendering: -webkit-optimize-contrast;
 }
 
 .controls {
