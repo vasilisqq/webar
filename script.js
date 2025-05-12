@@ -9,7 +9,7 @@ let isModelLoaded = false;
 
 // Инициализация
 function init() {
-    console.log("Initializing...28");
+    console.log("Initializing...27");
     console.log("Initializing AR Scene");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
@@ -189,35 +189,30 @@ function capturePhoto() {
     // Создаем временный рендерер для захвата
     renderer.render(scene, camera);
     
+    const video = document.getElementById('camera-feed');
     const dpi = window.devicePixelRatio;
     const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    
-    // Размеры как у окна
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    // Собираем финальное изображение
-    context.drawImage(renderer.domElement, 0, 0);
-    context.drawImage(document.querySelector('#camera-feed'), 0, 0);
     const ctx = canvas.getContext('2d');
-
-    // Сохранение
-    // Устанавливаем размеры для высокого разрешения
+    
     canvas.width = window.innerWidth * dpi;
     canvas.height = window.innerHeight * dpi;
     canvas.style.width = window.innerWidth + 'px';
     canvas.style.height = window.innerHeight + 'px';
     ctx.scale(dpi, dpi);
 
-    // 3. Рисуем видео и 3D-сцену
-    ctx.drawImage(document.querySelector('#camera-feed'), 0, 0, window.innerWidth, window.innerHeight);
-    ctx.drawImage(renderer.domElement, 0, 0, window.innerWidth, window.innerHeight);
+    // Сначала рисуем видео
+    ctx.drawImage(video, 0, 0, window.innerWidth, window.innerHeight);
+    
+    // Затем рисуем основной канвас Three.js
+    ctx.drawImage(renderer.domElement, 0, 0);
 
-    // 4. Сохранение
+    // Сохранение
     const link = document.createElement('a');
-    link.download = 'ar-photo.png';
+    link.download = `ar-photo-${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 window.addEventListener('load', init);
