@@ -29,8 +29,8 @@ function init() {
     //scene.add(ambientLight);
 
     // 4. Загрузка 3D-модели
-    //const loader = new THREE.GLTFLoader();
-    //document.querySelector('.loading').style.display = 'block';
+    const loader = new THREE.GLTFLoader();
+    document.querySelector('.loading').style.display = 'block';
     
     loader.load(
        'assets/models/model.glb',
