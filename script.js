@@ -9,7 +9,7 @@ let isModelLoaded = false;
 
 // Инициализация
 function init() {
-    console.log("Initializing...27");
+    console.log("Initializing...29");
     console.log("Initializing AR Scene");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
