@@ -4,7 +4,7 @@ let previousTouch;
 
 // Инициализация
 function init() {
-    console.log("вапвп");
+    console.log("вапвп21");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(
