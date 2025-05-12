@@ -31,24 +31,29 @@ function init() {
     const loader = new THREE.GLTFLoader();
     document.querySelector('.loading').style.display = 'block';
     
-    loader.load(
-        'assets/models/model.glb',
-        (gltf) => {
+    //loader.load(
+    //    'assets/models/model.glb',
+    //    (gltf) => {
 
-            model = gltf.scene;
-            console.log("Позиция модели:", model.position); // Должно быть (0,0,0)
-            console.log("Позиция камеры:", camera.position); // Должно быть (0,0,5)
-            model.scale.set(1, 1, 1);
-            model.position.set(0,0,0);
-            scene.add(model);
-            document.querySelector('.loading').style.display = 'none';
-        },
-        undefined,
-        (error) => {
-            console.error('Ошибка загрузки модели:', error);
-            alert('Ошибка загрузки 3D-модели!');
-        }
-    );
+        //    model = gltf.scene;
+         //   console.log("Позиция модели:", model.position); // Должно быть (0,0,0)
+          //  console.log("Позиция камеры:", camera.position); // Должно быть (0,0,5)
+            //model.scale.set(1, 1, 1);
+    //        model.position.set(0,0,0);
+      //      scene.add(model);
+        //    document.querySelector('.loading').style.display = 'none';
+    //    },
+    //    undefined,
+    //    (error) => {
+    //        console.error('Ошибка загрузки модели:', error);
+    //        alert('Ошибка загрузки 3D-модели!');
+    //    }
+    //);
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    animate();
 
     // 5. Запуск камеры устройства
     const video = document.getElementById('camera-feed');
