@@ -63,6 +63,7 @@ function init() {
             video.srcObject = stream;
             animate();
             console.log("аырфлраолыфд");
+            console.log("Позиция модели:", model.position);
         })
         .catch((err) => {
             console.error("Ошибка доступа к камере:", err);
