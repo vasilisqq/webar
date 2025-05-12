@@ -31,7 +31,7 @@ function init() {
     document.querySelector('.loading').style.display = 'block';
     
     loader.load(
-        'assets/models/model.glb',
+        'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb',
         (gltf) => {
             model = gltf.scene;
             model.scale.set(0.5, 0.5, 0.5);
