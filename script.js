@@ -21,7 +21,7 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     
     // 2. Позиция камеры
-    camera.position.z = 2;
+    camera.position.z = 5;
 
     // 3. Освещение
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -54,7 +54,7 @@ function init() {
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
     console.log("куб добавлен");
-    // animate();
+    animate();
 
     // 5. Запуск камеры устройства
     const video = document.getElementById('camera-feed');
@@ -70,7 +70,10 @@ function init() {
     // 6. Обработчики событий
     setupEventListeners();
 }
-
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera); // Рендеринг кадра
+}
 // Управление объектом
 function setupEventListeners() {
     const container = document.getElementById('ar-container');
