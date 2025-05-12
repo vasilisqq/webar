@@ -3,32 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-    </style>
+    <title>AR 3D Viewer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="scene-container">
-        <video id="camera" autoplay playsinline width="640" height="480"></video>
-        <script>
-            const video = document.getElementById('camera');
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => video.srcObject = stream)
-                .catch(err => console.error('Ошибка:', err));
-        </script>
+    <!-- Контейнер для AR-сцены -->
+    <div id="ar-container">
+        <video id="camera-feed" autoplay playsinline></video>
+        <canvas id="render-canvas"></canvas>
     </div>
 
-    <!-- Кнопка для фото -->
-    <button id="capture-btn" style="position: absolute; bottom: 20px; left: 20px; z-index: 100;">
-        Сфотографировать
-    </button>
+    <!-- Интерфейс -->
+    <div class="controls">
+        <button id="capture-btn">📸 Сфотографировать</button>
+        <div class="loading">Загрузка модели...</div>
+    </div>
 
-    <!-- Подключаем Three.js и AR.js -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- Подключаем Three.js и плагины -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    
+    <!-- Основной скрипт -->
     <script src="script.js"></script>
 </body>
 </html>
