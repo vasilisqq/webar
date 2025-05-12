@@ -50,13 +50,6 @@ function init() {
            alert('Ошибка загрузки 3D-модели!');
        }
     );
-    // const geometry = new THREE.BoxGeometry(1,1,1);
-    // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    // const cube = new THREE.Mesh(geometry, material);
-    // // scene.add(cube);
-    // console.log("куб добавлен");
-    // console.log(cube.position);
-    // 5. Запуск камеры устройства
     const video = document.getElementById('camera-feed');
     navigator.mediaDevices.getUserMedia({ video: true })
         .then((stream) => {
@@ -118,6 +111,7 @@ function setupEventListeners() {
 
 // Фотографирование
 function capturePhoto() {
+    renderer.render(scene, camera);
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     
@@ -126,8 +120,8 @@ function capturePhoto() {
     canvas.height = window.innerHeight;
     
     // Собираем финальное изображение
-    context.drawImage(document.querySelector('#camera-feed'), 0, 0);
     context.drawImage(renderer.domElement, 0, 0);
+    context.drawImage(document.querySelector('#camera-feed'), 0, 0);
     
     // Сохранение
     const link = document.createElement('a');
