@@ -31,7 +31,7 @@ function init() {
     document.querySelector('.loading').style.display = 'block';
     
     loader.load(
-        'assets/models/object.glb',
+        'assets/models/model.glb',
         (gltf) => {
             model = gltf.scene;
             model.scale.set(0.5, 0.5, 0.5);
