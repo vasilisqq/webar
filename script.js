@@ -9,7 +9,7 @@ let isModelLoaded = false;
 
 // Инициализация
 function init() {
-    console.log("Initializing...30");
+    console.log("Initializing...31");
     console.log("Initializing AR Scene");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
@@ -234,3 +234,9 @@ function capturePhoto() {
     link.click();
     document.body.removeChild(link);
 }
+window.addEventListener('load', init);
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
