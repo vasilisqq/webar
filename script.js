@@ -9,7 +9,7 @@ let isModelLoaded = false;
 
 // Инициализация
 function init() {
-    console.log("Initializing...26");
+    console.log("Initializing...27");
     console.log("Initializing AR Scene");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
@@ -187,13 +187,8 @@ function handleCapture() {
 
 function capturePhoto() {
     // Создаем временный рендерер для захвата
-    const tempRenderer = new THREE.WebGLRenderer({
-        antialias: true,
-        preserveDrawingBuffer: true
-    });
-    tempRenderer.setSize(window.innerWidth, window.innerHeight);
-    tempRenderer.render(scene, camera);
-
+    renderer.render(scene, camera);
+    
     const video = document.getElementById('camera-feed');
     const dpi = window.devicePixelRatio;
     const canvas = document.createElement('canvas');
@@ -205,11 +200,11 @@ function capturePhoto() {
     canvas.style.height = window.innerHeight + 'px';
     ctx.scale(dpi, dpi);
 
-    // Рисуем видео
+    // Сначала рисуем видео
     ctx.drawImage(video, 0, 0, window.innerWidth, window.innerHeight);
     
-    // Рисуем 3D-сцену поверх видео
-    ctx.drawImage(tempRenderer.domElement, 0, 0);
+    // Затем рисуем основной канвас Three.js
+    ctx.drawImage(renderer.domElement, 0, 0);
 
     // Сохранение
     const link = document.createElement('a');
@@ -218,7 +213,6 @@ function capturePhoto() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    tempRenderer.dispose();
 }
 
 window.addEventListener('load', init);
