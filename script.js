@@ -55,6 +55,7 @@ function init() {
     scene.add(cube);
     console.log("куб добавлен");
     animate();
+    console.log("аырфлраолыфд");
 
     // 5. Запуск камеры устройства
     const video = document.getElementById('camera-feed');
