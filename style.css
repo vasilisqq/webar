@@ -26,11 +26,11 @@ body {
 
 #render-canvas {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
     z-index: 2; /* 3D-сцена поверх видео */
     touch-action: none; /* Для мобильных жестов */
-
 }
 
 .controls {

@@ -4,7 +4,7 @@ let previousTouch;
 
 // Инициализация
 function init() {
-    console.log("вапвп21");
+    console.log("вапвп22");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(
@@ -17,8 +17,10 @@ function init() {
     renderer = new THREE.WebGLRenderer({
         canvas: document.querySelector('#render-canvas'),
         alpha: true,
-        antialias: true
+        antialias: true,
+        powerPreference: "high-performance"
     });
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     
     // 2. Позиция камеры
@@ -111,19 +113,26 @@ function setupEventListeners() {
 
 // Фотографирование
 function capturePhoto() {
+    // 1. Принудительный рендеринг сцены
     renderer.render(scene, camera);
+
+    // 2. Создаем холст с учетом DPI устройства
+    const dpi = window.devicePixelRatio;
     const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
     
-    // Размеры как у окна
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    // Собираем финальное изображение
-    context.drawImage(renderer.domElement, 0, 0);
-    context.drawImage(document.querySelector('#camera-feed'), 0, 0);
-    
-    // Сохранение
+    // Устанавливаем размеры для высокого разрешения
+    canvas.width = window.innerWidth * dpi;
+    canvas.height = window.innerHeight * dpi;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.scale(dpi, dpi);
+
+    // 3. Рисуем видео и 3D-сцену
+    ctx.drawImage(document.querySelector('#camera-feed'), 0, 0, window.innerWidth, window.innerHeight);
+    ctx.drawImage(renderer.domElement, 0, 0, window.innerWidth, window.innerHeight);
+
+    // 4. Сохранение
     const link = document.createElement('a');
     link.download = 'ar-photo.png';
     link.href = canvas.toDataURL('image/png');
