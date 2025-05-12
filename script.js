@@ -16,20 +16,21 @@ function init() {
     
     renderer = new THREE.WebGLRenderer({
         canvas: document.querySelector('#render-canvas'),
-        alpha: true
+        alpha: true,
+        antialias: true
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     
     // 2. Позиция камеры
-    camera.position.z = 5;
+    camera.position.z = 2;
 
     // 3. Освещение
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    scene.add(ambientLight);
+    //const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    //scene.add(ambientLight);
 
     // 4. Загрузка 3D-модели
-    const loader = new THREE.GLTFLoader();
-    document.querySelector('.loading').style.display = 'block';
+    //const loader = new THREE.GLTFLoader();
+    //document.querySelector('.loading').style.display = 'block';
     
     //loader.load(
     //    'assets/models/model.glb',
@@ -49,19 +50,19 @@ function init() {
     //        alert('Ошибка загрузки 3D-модели!');
     //    }
     //);
-    const geometry = new THREE.BoxGeometry();
+    const geometry = new THREE.BoxGeometry(1,1,1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
     console.log("куб добавлен");
-    animate();
-    console.log("аырфлраолыфд");
 
     // 5. Запуск камеры устройства
     const video = document.getElementById('camera-feed');
     navigator.mediaDevices.getUserMedia({ video: true })
         .then((stream) => {
             video.srcObject = stream;
+            animate();
+            console.log("аырфлраолыфд");
         })
         .catch((err) => {
             console.error("Ошибка доступа к камере:", err);

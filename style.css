@@ -13,10 +13,10 @@ body {
     position: relative;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 
 #camera-feed {
-    display: none;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -25,10 +25,12 @@ body {
 }
 
 #render-canvas {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* 3D-сцена поверх видео */
+    touch-action: none; /* Для мобильных жестов */
+
 }
 
 .controls {
