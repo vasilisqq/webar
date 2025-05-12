@@ -4,6 +4,7 @@ let previousTouch;
 
 // Инициализация
 function init() {
+    console.log("вапвп");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(
@@ -35,7 +36,7 @@ function init() {
         (gltf) => {
             model = gltf.scene;
             console.log("Позиция модели:", model.position); // Должно быть (0,0,0)
-    console.log("Позиция камеры:", camera.position); // Должно быть (0,0,5)
+            console.log("Позиция камеры:", camera.position); // Должно быть (0,0,5)
             model.scale.set(1, 1, 1);
             model.position.set(0,0,0);
             scene.add(model);
