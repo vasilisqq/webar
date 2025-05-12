@@ -34,7 +34,10 @@ function init() {
         'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb',
         (gltf) => {
             model = gltf.scene;
-            model.scale.set(0.5, 0.5, 0.5);
+            console.log("Позиция модели:", model.position); // Должно быть (0,0,0)
+    console.log("Позиция камеры:", camera.position); // Должно быть (0,0,5)
+            model.scale.set(1, 1, 1);
+            model.position.set(0,0,0);
             scene.add(model);
             document.querySelector('.loading').style.display = 'none';
         },
