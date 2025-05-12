@@ -10,7 +10,15 @@
     </style>
 </head>
 <body>
-    <div id="scene-container"></div>
+    <div id="scene-container">
+        <video id="camera" autoplay playsinline width="640" height="480"></video>
+        <script>
+            const video = document.getElementById('camera');
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => video.srcObject = stream)
+                .catch(err => console.error('Ошибка:', err));
+        </script>
+    </div>
 
     <!-- Кнопка для фото -->
     <button id="capture-btn" style="position: absolute; bottom: 20px; left: 20px; z-index: 100;">
