@@ -66,3 +66,15 @@ button:hover {
     font-size: 24px;
     z-index: 4;
 }
+.camera-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+}

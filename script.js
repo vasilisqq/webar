@@ -3,10 +3,12 @@ let isDragging = false;
 let previousTouch;
 let initialDistance = null;
 let initialScale = 1;
+let currentVideoStream = null;
+let isFrontCamera = false;    
 
 // Инициализация
 function init() {
-    console.log("Initializing...23");
+    console.log("Initializing...24");
     // 1. Настройка Three.js сцены
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(
@@ -52,19 +54,37 @@ function init() {
            alert('Error loading 3D model!');
        }
     );
-
+    startCamera();
+    setupEventListeners();
+}
+function startCamera() {
     const video = document.getElementById('camera-feed');
-    navigator.mediaDevices.getUserMedia({ video: true })
+    const constraints = {
+        video: {
+            facingMode: isFrontCamera ? "user" : "environment",
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+        }
+    };
+
+    if (currentVideoStream) {
+        currentVideoStream.getTracks().forEach(track => track.stop());
+    }
+    navigator.mediaDevices.getUserMedia(constraints)
         .then((stream) => {
+            currentVideoStream = stream;
             video.srcObject = stream;
+            video.style.transform = isFrontCamera ? 'scaleX(-1)' : 'none';
             animate();
         })
         .catch((err) => {
             console.error("Camera access error:", err);
             alert('Failed to access camera!');
         });
-
-    setupEventListeners();
+}
+function toggleCamera() {
+    isFrontCamera = !isFrontCamera;
+    startCamera();
 }
 
 function animate() {
@@ -76,6 +96,7 @@ function setupEventListeners() {
     const container = document.getElementById('ar-container');
     
     // Десктоп: перемещение мышью
+    document.getElementById('switch-camera').addEventListener('click', toggleCamera);
     container.addEventListener('mousedown', () => isDragging = true);
     container.addEventListener('mouseup', () => isDragging = false);
     
