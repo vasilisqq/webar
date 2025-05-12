@@ -55,7 +55,7 @@ function init() {
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
     console.log("куб добавлен");
-
+    console.log(cube.position);
     // 5. Запуск камеры устройства
     const video = document.getElementById('camera-feed');
     navigator.mediaDevices.getUserMedia({ video: true })
