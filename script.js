@@ -32,8 +32,9 @@ function init() {
     document.querySelector('.loading').style.display = 'block';
     
     loader.load(
-        'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb',
+        'assets/models/model.glb',
         (gltf) => {
+
             model = gltf.scene;
             console.log("Позиция модели:", model.position); // Должно быть (0,0,0)
             console.log("Позиция камеры:", camera.position); // Должно быть (0,0,5)
