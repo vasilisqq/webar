@@ -7,9 +7,14 @@ let currentVideoStream = null;
 let isFrontCamera = false;
 let isModelLoaded = false;
 
+
+let initialAngle = 0;
+let initialRotation = 0;
+const ROTATION_SPEED = 0.05;
+
 // Инициализация
 function init() {
-  console.log("Initializing...34");
+  console.log("Initializing...35");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -111,11 +116,19 @@ function handleTouchStart(e) {
   if (e.touches.length === 1) {
     isDragging = true;
     previousTouch = e.touches[0];
-  } else if (e.touches.length === 2) {
+} else if (e.touches.length === 2) {
     isDragging = false;
-    initialDistance = getDistance(e.touches[0], e.touches[1]);
+    const touch1 = e.touches[0];
+    const touch2 = e.touches[1];
+    
+    // Инициализация для масштабирования
+    initialDistance = getDistance(touch1, touch2);
     initialScale = model.scale.x;
-  }
+    
+    // Инициализация для вращения
+    initialAngle = getAngle(touch1, touch2);
+    initialRotation = model.rotation.y;
+}
 }
 
 function handleTouchEnd(e) {
@@ -127,28 +140,42 @@ function handleTouchMove(e) {
   if (!model) return;
 
   if (e.touches.length === 1 && isDragging) {
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - previousTouch.clientX;
-    const deltaY = touch.clientY - previousTouch.clientY;
-
-    model.position.x += deltaX * 0.01;
-    model.position.y -= deltaY * 0.01;
-    previousTouch = touch;
+      // Перемещение одним пальцем
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - previousTouch.clientX;
+      const deltaY = touch.clientY - previousTouch.clientY;
+      
+      model.position.x += deltaX * 0.01;
+      model.position.y -= deltaY * 0.01;
+      previousTouch = touch;
   } else if (e.touches.length === 2) {
-    e.preventDefault();
-    const currentDistance = getDistance(e.touches[0], e.touches[1]);
-
-    if (initialDistance !== null) {
-      const scaleFactor = currentDistance / initialDistance;
-      const newScale = initialScale * scaleFactor;
-
-      model.scale.set(
-        Math.min(Math.max(newScale, 0.5), 3),
-        Math.min(Math.max(newScale, 0.5), 3),
-        Math.min(Math.max(newScale, 0.5), 3)
-      );
-    }
+      e.preventDefault();
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      
+      // Масштабирование
+      const currentDistance = getDistance(touch1, touch2);
+      if (initialDistance !== null) {
+          const scaleFactor = currentDistance / initialDistance;
+          const newScale = initialScale * scaleFactor;
+          
+          model.scale.set(
+              Math.min(Math.max(newScale, 0.5), 3),
+              Math.min(Math.max(newScale, 0.5), 3),
+              Math.min(Math.max(newScale, 0.5), 3)
+          );
+      }
+      
+      // Вращение
+      const currentAngle = getAngle(touch1, touch2);
+      const angleDelta = currentAngle - initialAngle;
+      model.rotation.y = initialRotation + angleDelta * ROTATION_SPEED;
   }
+}
+function getAngle(touch1, touch2) {
+  const dx = touch2.clientX - touch1.clientX;
+  const dy = touch2.clientY - touch1.clientY;
+  return Math.atan2(dy, dx);
 }
 
 function getDistance(touch1, touch2) {
