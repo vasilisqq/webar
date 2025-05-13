@@ -105,3 +105,12 @@ button:hover {
     border-radius: 8px;
     z-index: 1002;
 }
+.gesture-help {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
