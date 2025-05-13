@@ -27,14 +27,10 @@ body {
     position: fixed;
     top: 20px;
     right: 20px;
-    padding: 12px;
-    border-radius: 50%;
-    z-index: 1001; /* Выше чем у канваса */
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    cursor: pointer;
+    padding: 14px; /* Такие же отступы как у основной кнопки */
+    border-radius: 30px; /* Такая же скругленность */
     font-size: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    /* Остальные свойства наследуются из button */
 }
 #render-canvas {
     position: absolute;
@@ -48,8 +44,6 @@ body {
 }
 
 .controls {
-    display: flex;
-    gap: 15px;
     position: fixed;
     bottom: 20px;
     left: 50%;
@@ -58,21 +52,29 @@ body {
 }
 
 button {
-    padding: 12px 24px;
+    padding: 14px 24px;
     font-size: 16px;
-    background: #2196F3;
+    background: rgba(33, 150, 243, 0.9);
     color: white;
     border: none;
-    border-radius: 25px;
+    border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 button:hover {
-    background: #1976D2;
-    transform: scale(1.05);
+    background: rgba(25, 118, 210, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
 }
+
 
 .loading {
     display: none;
@@ -83,16 +85,4 @@ button:hover {
     color: white;
     font-size: 24px;
     z-index: 4;
-}
-.camera-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    padding: 12px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.8);
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
 }
