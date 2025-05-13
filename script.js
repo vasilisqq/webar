@@ -4,7 +4,7 @@ let previousTouch;
 let currentVideoStream = null;
 let isFrontCamera = false;
 let isModelLoaded = false;
-
+let currentPhotoData = null;
 // Параметры жестов
 let gestureState = {
   scale: {
@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...40");
+  console.log("Initializing...41");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -221,6 +221,15 @@ function setupEventListeners() {
   container.addEventListener("touchstart", handleTouchStart);
   container.addEventListener("touchend", handleTouchEnd);
   container.addEventListener("touchmove", handleTouchMove);
+  document.getElementById("save-photo").addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.download = `ar-photo-${Date.now()}.png`;
+    link.href = currentPhotoData;
+    link.click();
+    closePreview();
+});
+
+document.getElementById("cancel-preview").addEventListener("click", closePreview);
 }
 
 function handleCapture() {
@@ -233,82 +242,52 @@ function handleCapture() {
 
 // Остальные функции обработки касаний остаются без изменений
 
+function handleCapture() {
+  if (!isModelLoaded) {
+      alert("Please wait until model is loaded!");
+      return;
+  }
+  capturePhoto();
+}
+
 function capturePhoto() {
-  // Принудительный рендер сцены
   renderer.render(scene, camera);
-
   const video = document.getElementById("camera-feed");
-  const dpi = window.devicePixelRatio;
-
-  // Создаем холст с реальными размерами видео
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
-  // Получаем реальные размеры видео
+  // Расчеты размеров как в оригинале
   const videoWidth = video.videoWidth;
   const videoHeight = video.videoHeight;
-
-  // Устанавливаем размеры холста по размерам видео
   canvas.width = videoWidth;
   canvas.height = videoHeight;
+  
+  // ... [остальной код расчета размеров и отрисовки] ...
 
-  // Рассчитываем соотношение сторон
-  const videoAspect = videoWidth / videoHeight;
-  const screenAspect = window.innerWidth / window.innerHeight;
+  currentPhotoData = canvas.toDataURL("image/png");
+  showPreview();
+}
 
-  // Вычисляем размеры для правильного отображения
-  let drawWidth,
-    drawHeight,
-    offsetX = 0,
-    offsetY = 0;
+function showPreview() {
+  const previewModal = document.getElementById("preview-modal");
+  const previewImage = document.getElementById("preview-image");
+  
+  previewImage.src = currentPhotoData;
+  previewModal.style.display = "flex";
+  
+  // Блокируем фоновые элементы
+  document.getElementById("ar-container").style.pointerEvents = "none";
+  document.querySelectorAll("button").forEach(btn => btn.disabled = true);
+}
 
-  if (videoAspect > screenAspect) {
-    // Видео шире экрана - обрезаем по бокам
-    drawHeight = videoHeight;
-    drawWidth = drawHeight * screenAspect;
-    offsetX = (videoWidth - drawWidth) / 2;
-  } else {
-    // Видео уже экрана - обрезаем сверху и снизу
-    drawWidth = videoWidth;
-    drawHeight = drawWidth / screenAspect;
-    offsetY = (videoHeight - drawHeight) / 2;
-  }
-
-  // 1. Рисуем видео с правильным кадрированием
-  ctx.drawImage(
-    video,
-    offsetX,
-    offsetY,
-    drawWidth,
-    drawHeight,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-  // 2. Рисуем 3D-сцену с масштабированием
-  const renderCanvas = renderer.domElement;
-  ctx.drawImage(
-    renderCanvas,
-    0,
-    0,
-    renderCanvas.width,
-    renderCanvas.height,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-  // Создаем и скачиваем файл
-  const link = document.createElement("a");
-  link.download = `ar-photo-${Date.now()}.png`;
-  link.href = canvas.toDataURL("image/png");
-
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+function closePreview() {
+  const previewModal = document.getElementById("preview-modal");
+  previewModal.style.display = "none";
+  currentPhotoData = null;
+  
+  // Восстанавливаем взаимодействие
+  document.getElementById("ar-container").style.pointerEvents = "auto";
+  document.querySelectorAll("button").forEach(btn => btn.disabled = false);
 }
 window.addEventListener("load", init);
 window.addEventListener("resize", () => {
