@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...47");
+  console.log("Initializing...48");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -292,7 +292,14 @@ function capturePhoto() {
     drawHeight = drawWidth / screenAspect;
     offsetY = (videoHeight - drawHeight) / 2;
   }
-
+  const originalTransform = video.style.transform;
+  video.style.transform = 'none';
+  ctx.save();
+  if (isFrontCamera) {
+    // Зеркалим только по горизонтали
+    ctx.scale(-1, 1);
+    ctx.translate(-videoWidth, 0);
+  }
   // 1. Сначала рисуем видео
   ctx.drawImage(
     video,
@@ -305,7 +312,7 @@ function capturePhoto() {
     canvas.width,
     canvas.height
   );
-
+  ctx.restore();
   // 2. Затем рисуем 3D-сцену поверх видео
   ctx.drawImage(
     renderCanvas,
@@ -318,13 +325,7 @@ function capturePhoto() {
     canvas.width,
     canvas.height
   );
-
-  // Добавляем задержку для корректного рендеринга
-  setTimeout(() => {
-    currentPhotoData = canvas.toDataURL("image/png");
-    showPreview();
-    renderer.render(scene, camera);
-  }, 100);
+  video.style.transform = originalTransform;
 }
 
 function showPreview() {
