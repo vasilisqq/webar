@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...41");
+  console.log("Initializing...42");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -230,8 +230,16 @@ function setupEventListeners() {
 });
 
 document.getElementById("cancel-preview").addEventListener("click", closePreview);
+document.getElementById("save-photo").addEventListener("click", handleSavePhoto);
+  document.getElementById("cancel-preview").addEventListener("click", closePreview);
 }
-
+function handleSavePhoto() {
+  const link = document.createElement("a");
+  link.download = `ar-photo-${Date.now()}.png`;
+  link.href = currentPhotoData;
+  link.click();
+  closePreview();
+}
 function handleCapture() {
   if (!isModelLoaded) {
     alert("Please wait until model is loaded!");
@@ -251,18 +259,64 @@ function handleCapture() {
 }
 
 function capturePhoto() {
+  // Принудительный рендер сцены
   renderer.render(scene, camera);
+
   const video = document.getElementById("camera-feed");
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
-  // Расчеты размеров как в оригинале
+  // Получаем реальные размеры видео
   const videoWidth = video.videoWidth;
   const videoHeight = video.videoHeight;
+
+  // Устанавливаем размеры холста по размерам видео
   canvas.width = videoWidth;
   canvas.height = videoHeight;
-  
-  // ... [остальной код расчета размеров и отрисовки] ...
+
+  // Рассчитываем соотношение сторон
+  const videoAspect = videoWidth / videoHeight;
+  const screenAspect = window.innerWidth / window.innerHeight;
+
+  // Вычисляем размеры для правильного отображения
+  let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+
+  if (videoAspect > screenAspect) {
+    drawHeight = videoHeight;
+    drawWidth = drawHeight * screenAspect;
+    offsetX = (videoWidth - drawWidth) / 2;
+  } else {
+    drawWidth = videoWidth;
+    drawHeight = drawWidth / screenAspect;
+    offsetY = (videoHeight - drawHeight) / 2;
+  }
+
+  // 1. Рисуем видео с правильным кадрированием
+  ctx.drawImage(
+    video,
+    offsetX,
+    offsetY,
+    drawWidth,
+    drawHeight,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  // 2. Рисуем 3D-сцену с масштабированием
+  const renderCanvas = renderer.domElement;
+  ctx.drawImage(
+    renderCanvas,
+    0,
+    0,
+    renderCanvas.width,
+    renderCanvas.height,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
   currentPhotoData = canvas.toDataURL("image/png");
   showPreview();
@@ -277,7 +331,10 @@ function showPreview() {
   
   // Блокируем фоновые элементы
   document.getElementById("ar-container").style.pointerEvents = "none";
-  document.querySelectorAll("button").forEach(btn => btn.disabled = true);
+  document.querySelectorAll("button:not(.modal-buttons button)").forEach(btn => {
+    btn.style.pointerEvents = "none";
+    btn.style.opacity = "0.5";
+  });
 }
 
 function closePreview() {
@@ -287,7 +344,10 @@ function closePreview() {
   
   // Восстанавливаем взаимодействие
   document.getElementById("ar-container").style.pointerEvents = "auto";
-  document.querySelectorAll("button").forEach(btn => btn.disabled = false);
+  document.querySelectorAll("button").forEach(btn => {
+    btn.style.pointerEvents = "auto";
+    btn.style.opacity = "1";
+  });
 }
 window.addEventListener("load", init);
 window.addEventListener("resize", () => {
