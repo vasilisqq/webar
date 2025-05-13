@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...48");
+  console.log("Initializing...49");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -326,6 +326,8 @@ function capturePhoto() {
     canvas.height
   );
   video.style.transform = originalTransform;
+  currentPhotoData = canvas.toDataURL("image/png");
+  showPreview();
 }
 
 function showPreview() {
