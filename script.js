@@ -17,12 +17,12 @@ let gestureState = {
   }
 };
 
-const ROTATION_SENSITIVITY = 0.1;
+const ROTATION_SENSITIVITY = 0.5;
 const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...39");
+  console.log("Initializing...40");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
