@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...43");
+  console.log("Initializing...44");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -37,6 +37,7 @@ function init() {
     canvas: document.querySelector("#render-canvas"),
     alpha: true,
     antialias: true,
+    premultipliedAlpha: false,
     powerPreference: "high-performance",
   });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -298,6 +299,19 @@ function capturePhoto() {
 
   // 1. Рисуем видео с правильным кадрированием
   ctx.drawImage(
+    renderCanvas,
+    0,
+    0,
+    renderCanvas.width,
+    renderCanvas.height,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+  
+  // 2. Затем видео
+  ctx.drawImage(
     video,
     offsetX,
     offsetY,
@@ -309,33 +323,14 @@ function capturePhoto() {
     canvas.height
   );
 
-  // 2. Рисуем 3D-сцену с масштабированием
-  const renderCanvas = renderer.domElement;
-  ctx.drawImage(
-    renderCanvas,
-    0,
-    0,
-    renderCanvas.width,
-    renderCanvas.height,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
   currentPhotoData = canvas.toDataURL("image/png");
-  try {
-    ctx.drawImage(video, 0, 0);
-  } catch (error) {
-    console.error("Video capture error:", error);
-    alert("Please allow camera access!");
-    return;
-  }
+  
 
   // Добавляем задержку для корректного рендеринга
   setTimeout(() => {
     currentPhotoData = canvas.toDataURL("image/png");
     showPreview();
+    renderer.render(scene, camera); // Добавьте эту строку
   }, 100);
 }
 
@@ -367,8 +362,13 @@ function closePreview() {
   });
 }
 window.addEventListener("load", init);
-window.addEventListener("resize", () => {
+wwindow.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  
+  // Добавьте обновление матрицы проекции
+  if (model) {
+    model.updateMatrixWorld();
+  }
 });
