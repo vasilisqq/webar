@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...46");
+  console.log("Initializing...47");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -222,13 +222,6 @@ function setupEventListeners() {
   container.addEventListener("touchstart", handleTouchStart);
   container.addEventListener("touchend", handleTouchEnd);
   container.addEventListener("touchmove", handleTouchMove);
-  document.getElementById("save-photo").addEventListener("click", () => {
-    const link = document.createElement("a");
-    link.download = `ar-photo-${Date.now()}.png`;
-    link.href = currentPhotoData;
-    link.click();
-    closePreview();
-});
 
 document.getElementById("cancel-preview").addEventListener("click", closePreview);
 document.getElementById("save-photo").addEventListener("click", handleSavePhoto);
