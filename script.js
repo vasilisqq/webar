@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...42");
+  console.log("Initializing...43");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -231,29 +231,34 @@ function setupEventListeners() {
 
 document.getElementById("cancel-preview").addEventListener("click", closePreview);
 document.getElementById("save-photo").addEventListener("click", handleSavePhoto);
-  document.getElementById("cancel-preview").addEventListener("click", closePreview);
 }
+
 function handleSavePhoto() {
-  const link = document.createElement("a");
-  link.download = `ar-photo-${Date.now()}.png`;
-  link.href = currentPhotoData;
-  link.click();
+  if (!currentPhotoData) {
+    alert("No photo to save!");
+    return;
+  }
+  
+  try {
+    const link = document.createElement("a");
+    link.download = `ar-photo-${Date.now()}.png`;
+    link.href = currentPhotoData;
+    
+    // Добавляем временно в DOM
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Save error:", error);
+    alert("Error saving photo!");
+  }
+  
   closePreview();
 }
 function handleCapture() {
   if (!isModelLoaded) {
     alert("Please wait until model is loaded!");
     return;
-  }
-  capturePhoto();
-}
-
-// Остальные функции обработки касаний остаются без изменений
-
-function handleCapture() {
-  if (!isModelLoaded) {
-      alert("Please wait until model is loaded!");
-      return;
   }
   capturePhoto();
 }
@@ -319,7 +324,19 @@ function capturePhoto() {
   );
 
   currentPhotoData = canvas.toDataURL("image/png");
-  showPreview();
+  try {
+    ctx.drawImage(video, 0, 0);
+  } catch (error) {
+    console.error("Video capture error:", error);
+    alert("Please allow camera access!");
+    return;
+  }
+
+  // Добавляем задержку для корректного рендеринга
+  setTimeout(() => {
+    currentPhotoData = canvas.toDataURL("image/png");
+    showPreview();
+  }, 100);
 }
 
 function showPreview() {
