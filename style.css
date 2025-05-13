@@ -27,10 +27,19 @@ body {
     position: fixed;
     top: 20px;
     right: 20px;
-    padding: 14px; /* Такие же отступы как у основной кнопки */
-    border-radius: 30px; /* Такая же скругленность */
+    padding: 14px;
+    border-radius: 30px;
     font-size: 20px;
-    /* Остальные свойства наследуются из button */
+    background: rgba(33, 150, 243, 0.9);
+    color: white;
+    z-index: 1001;
+    opacity: 1 !important; /* Принудительная видимость */
+    visibility: visible !important;
+    pointer-events: all;
+}
+#ar-container {
+    position: relative;
+    z-index: 999; /* Меньше чем у кнопки */
 }
 #render-canvas {
     position: absolute;

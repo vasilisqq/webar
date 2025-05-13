@@ -9,7 +9,7 @@ let isModelLoaded = false;
 
 // Инициализация
 function init() {
-  console.log("Initializing...33");
+  console.log("Initializing...34");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -87,6 +87,13 @@ function startCamera() {
       console.error("Camera access error:", err);
       alert("Failed to access camera!");
     });
+    document.getElementById('switch-camera').style.display = 'block'; // Добавьте эту строку
+    
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then((stream) => {
+            // ... существующий код ...
+            document.getElementById('switch-camera').style.opacity = '1'; // И эту
+        });
 }
 
 function toggleCamera() {
