@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...45");
+  console.log("Initializing...46");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -271,6 +271,9 @@ function capturePhoto() {
   const video = document.getElementById("camera-feed");
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
+  
+  // Добавляем определение renderCanvas
+  const renderCanvas = renderer.domElement;
 
   // Получаем реальные размеры видео
   const videoWidth = video.videoWidth;
@@ -297,20 +300,7 @@ function capturePhoto() {
     offsetY = (videoHeight - drawHeight) / 2;
   }
 
-  // 1. Рисуем видео с правильным кадрированием
-  ctx.drawImage(
-    renderCanvas,
-    0,
-    0,
-    renderCanvas.width,
-    renderCanvas.height,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-  
-  // 2. Затем видео
+  // 1. Сначала рисуем видео
   ctx.drawImage(
     video,
     offsetX,
@@ -323,14 +313,24 @@ function capturePhoto() {
     canvas.height
   );
 
-  currentPhotoData = canvas.toDataURL("image/png");
-  
+  // 2. Затем рисуем 3D-сцену поверх видео
+  ctx.drawImage(
+    renderCanvas,
+    0,
+    0,
+    renderCanvas.width,
+    renderCanvas.height,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
   // Добавляем задержку для корректного рендеринга
   setTimeout(() => {
     currentPhotoData = canvas.toDataURL("image/png");
     showPreview();
-    renderer.render(scene, camera); // Добавьте эту строку
+    renderer.render(scene, camera);
   }, 100);
 }
 
