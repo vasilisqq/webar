@@ -5,22 +5,24 @@ let currentVideoStream = null;
 let isFrontCamera = false;
 let isModelLoaded = false;
 
-
+// Параметры жестов
 let gestureState = {
-  initialDistance: null,
-  initialScale: 1,
-  initialAngle: null,
-  initialRotation: 0,
-  isGestureActive: false
+  scale: {
+    initialDistance: null,
+    startScale: 1
+  },
+  rotate: {
+    initialAngle: null,
+    startRotation: 0
+  }
 };
 
-const ROTATION_SPEED = 0.05;
 const ROTATION_SENSITIVITY = 0.1;
-const SCALE_LIMITS = { min: 0.5, max: 5 };
+const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing...38");
+  console.log("Initializing...39");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -120,35 +122,30 @@ function animate() {
 }
 function handleTouchStart(e) {
   if (!isModelLoaded) return;
-  
+
   if (e.touches.length === 1) {
     isDragging = true;
     previousTouch = e.touches[0];
   } else if (e.touches.length === 2) {
-    const touch1 = e.touches[0];
-    const touch2 = e.touches[1];
+    const [touch1, touch2] = e.touches;
     
-    gestureState.initialDistance = getDistance(touch1, touch2);
-    gestureState.initialScale = model.scale.x;
-    gestureState.initialAngle = getAngle(touch1, touch2);
-    gestureState.initialRotation = model.rotation.y;
-    gestureState.isGestureActive = true;
+    // Инициализация масштабирования
+    gestureState.scale.initialDistance = getDistance(touch1, touch2);
+    gestureState.scale.startScale = model.scale.x;
+    
+    // Инициализация вращения
+    gestureState.rotate.initialAngle = getAngle(touch1, touch2);
+    gestureState.rotate.startRotation = model.rotation.y;
     
     e.preventDefault();
   }
 }
 
-function handleTouchEnd(e) {
-  isDragging = false;
-  gestureState.isGestureActive = false;
-  gestureState.initialDistance = null;
-  gestureState.initialAngle = null;
-}
-
 function handleTouchMove(e) {
-  if (!isModelLoaded || !gestureState.isGestureActive) return;
+  if (!isModelLoaded) return;
 
   if (e.touches.length === 1 && isDragging) {
+    // Перемещение
     const touch = e.touches[0];
     const deltaX = touch.clientX - previousTouch.clientX;
     const deltaY = touch.clientY - previousTouch.clientY;
@@ -158,35 +155,32 @@ function handleTouchMove(e) {
     previousTouch = touch;
     
   } else if (e.touches.length === 2) {
+    // Масштабирование и вращение
     e.preventDefault();
-    const touch1 = e.touches[0];
-    const touch2 = e.touches[1];
-    
-    const currentDistance = getDistance(touch1, touch2);
-    const currentAngle = getAngle(touch1, touch2);
+    const [touch1, touch2] = e.touches;
     
     // Масштабирование
-    if (gestureState.initialDistance !== null && currentDistance > 0) {
-      const scaleFactor = currentDistance / gestureState.initialDistance;
-      const newScale = Math.min(
-        Math.max(gestureState.initialScale * scaleFactor, SCALE_LIMITS.min), 
-        SCALE_LIMITS.max
-      );
-      model.scale.set(newScale, newScale, newScale);
+    const currentDistance = getDistance(touch1, touch2);
+    if (gestureState.scale.initialDistance && currentDistance > 0) {
+      const scale = (currentDistance / gestureState.scale.initialDistance) * gestureState.scale.startScale;
+      model.scale.setScalar(Math.min(Math.max(scale, SCALE_LIMITS.min), SCALE_LIMITS.max));
     }
     
     // Вращение
-    if (gestureState.initialAngle !== null) {
-      const angleDelta = currentAngle - gestureState.initialAngle;
-      model.rotation.y = gestureState.initialRotation + angleDelta * ROTATION_SENSITIVITY;
+    const currentAngle = getAngle(touch1, touch2);
+    if (gestureState.rotate.initialAngle !== null) {
+      const angleDelta = currentAngle - gestureState.rotate.initialAngle;
+      model.rotation.y = gestureState.rotate.startRotation + angleDelta * ROTATION_SENSITIVITY;
     }
-    
-    // Обновление начальных значений
-    gestureState.initialDistance = currentDistance;
-    gestureState.initialAngle = currentAngle;
-    gestureState.initialRotation = model.rotation.y;
   }
 }
+
+function handleTouchEnd(e) {
+  isDragging = false;
+  gestureState.scale.initialDistance = null;
+  gestureState.rotate.initialAngle = null;
+}
+
 function getAngle(touch1, touch2) {
   const dx = touch2.clientX - touch1.clientX;
   const dy = touch2.clientY - touch1.clientY;
