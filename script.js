@@ -55,7 +55,7 @@ function init() {
   document.querySelector(".loading").style.display = "block";
 
   loader.load(
-    "assets/models/model.glb",
+    "assets/models/cat.glb",
     (gltf) => {
       model = gltf.scene;
       model.scale.set(1, 1, 1);
