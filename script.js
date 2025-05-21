@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing..55");
+  console.log("Initializing..56");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -47,10 +47,8 @@ function init() {
   camera.position.z = 5;
 
   // 3. Освещение
-  const ambientLight = new THREE.AmbientLight(0xffffff, 20);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 10);
   scene.add(ambientLight);
-  const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
-  scene.add(hemisphereLight);
 
   // 4. Загрузка 3D-модели
   const loader = new THREE.GLTFLoader();
@@ -66,9 +64,6 @@ function init() {
       scene.add(model);
       isModelLoaded = true;
       document.querySelector(".loading").style.display = "none";
-      const bbox = new THREE.Box3().setFromObject(model);
-      const helper = new THREE.Box3Helper(bbox, 0xff0000);
-      scene.add(helper);
     },
     undefined,
     (error) => {
