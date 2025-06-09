@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing..56");
+  console.log("Initializing..57");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
