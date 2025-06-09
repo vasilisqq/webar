@@ -22,7 +22,7 @@ const SCALE_LIMITS = { min: 0.3, max: 5 };
 
 // Инициализация
 function init() {
-  console.log("Initializing..58");
+  console.log("Initializing..59");
   console.log("Initializing AR Scene");
   // 1. Настройка Three.js сцены
   scene = new THREE.Scene();
@@ -47,7 +47,7 @@ function init() {
   camera.position.z = 5;
 
   // 3. Освещение
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 2);
   scene.add(ambientLight);
 
   // 4. Загрузка 3D-модели
