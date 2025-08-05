@@ -12,7 +12,7 @@ This repository contains a 8thWall project contains ar technology for making pho
 
 ## Installation and use
 
-You should be clone this files into your 8thWall project or check how it [works](https://ngodbnn.8thwall.app/arcat/)
+You should be clone this files into your 8thWall project or check how it [works](https://ngodbnn.8thwall.app/arcat/) (use mobile)
 
 ## License
 
