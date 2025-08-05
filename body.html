@@ -1,0 +1,83 @@
+<!-- Copyright (c) 2022 8th Wall, Inc. -->
+<!-- body.html is optional; elements will be added to your html body after app.js is loaded. -->
+
+<a-scene
+  xrextras-gesture-detector
+  landing-page
+  xrextras-loading
+  xrextras-runtime-error
+  renderer="colorManagement: true; preserveDrawingBuffer: true"
+  xrweb="allowedDevices: mobile">
+  <a-assets>
+    <a-asset-item id="sandCastleModel" src="assets/untitled.glb" crossorigin="anonymous"></a-asset-item>
+    <img id="photo-icon" src="assets/photo.png" crossorigin="anonymous" />
+  </a-assets>
+
+  <a-camera
+    id="camera"
+    position="0 8 8"
+    raycaster="objects: .cantap"
+    cursor="fuse: false; rayOrigin: mouse;">
+  </a-camera>
+
+  <a-entity
+    light="
+      type: directional;
+      intensity: 1;
+      castShadow: false;
+      shadowMapHeight:2048;
+      shadowMapWidth:2048;
+      shadowCameraTop: 10;
+      target: #model;"
+    xrextras-attach="target: model; offset: 1 15 3;">
+  </a-entity>
+
+  <a-light type="ambient" intensity="0.7"></a-light>
+
+  <a-entity
+    id="model"
+    gltf-model="#sandCastleModel"
+    class="cantap"
+    animation-mixer="clip: *; loop: repeat""
+    xrextras-hold-drag
+    xrextras-two-finger-rotate
+    xrextras-pinch-scale="min: 0.1; max: 50"
+    scale="3 3 3"
+    shadow="receive: false">
+  </a-entity>
+
+  <a-plane
+    id="ground"
+    rotation="-90 0 0"
+    width="1000"
+    height="1000"
+    material="shader: shadow"
+    shadow>
+  </a-plane>
+
+  <button
+    type="image"
+    id="screenshotButton"
+    style="
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10000;
+      background: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    ">
+    <img
+      src="assets/photo.png"
+      alt="Сделать фото"
+      style="width: 30px; height: 30px; display: block" />
+  </button>
+</a-scene>
